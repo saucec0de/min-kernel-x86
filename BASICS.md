@@ -28,7 +28,7 @@ simple bootloader may be written to replace GRUB 2 in this part.
 [3]: https://en.wikipedia.org/wiki/Comparison_of_boot_loaders
 [4]: http://wiki.osdev.org/GRUB_2
 
-# Multiboot
+## Multiboot
 
 GRUB 2 follows [Multiboot Specification][5], which describes how a
 bootloader can load an x86 operating system kernel. Here we will use
@@ -44,9 +44,16 @@ start with a *Multiboot Header*, which has the following format:
 | magic number  | u32             | Identifies the header, which must be `0xE85250D6`            |
 | architecture  | u32             | `0` for 32-bit (protected) mode of i386, `4` for 32-bit MIPS |
 | header length | u32             | Total header size in bytes, including tags and magic fields  |
-| checksum      | u32             | `(magic + architecture + header_length)`, must be zero       |
+| checksum      | u32             | `-(magic + architecture + header_length)`, must be zero      |
 | tags          | variable        | Kinds of (type, flags, size)                                 |
 | end tag       | (u16, u16, u32) | `(0, 0, 8)`                                                  |
 
+For an x86 machine, the following bootloader header works:
+
+```asm
+
+```
+
 [5]: https://en.wikipedia.org/wiki/Multiboot_Specification
 [6]: http://nongnu.askapache.com/grub/phcoder/multiboot.pdf
+

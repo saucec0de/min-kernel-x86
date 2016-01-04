@@ -94,3 +94,67 @@ $ hexdump -x multiboot_header
 
 # Boot the kernel
 
+The bootloader then needs to boot the kernel. We put a short code in the
+.text section which contains the executable codes. The file is named as
+`boot_simple.asm`:
+```asm
+global start
+
+section .text
+bits 32         ;32-bit instructions in protected mode
+                ;64-bit in long mode
+
+start:
+    ;print `Hello, World!` to screen
+    mov dword [0xB8000], 0x2F652F48
+    mov dword [0xB8004], 0x2F6C2F6C
+    mov dword [0xB8008], 0x2F2C2F6F
+    mov dword [0xB800C], 0x2F572F20
+    mov dword [0xB8010], 0x2F722F6F
+    mov dword [0xB8010], 0x2F642F6C
+    mov dword [0xB8014], 0x2F202F21
+    hlt         ;halt the CPU
+```
+
+The `global` exports the label `start`. At address `0xB8000` begins [VGA
+text buffer][7]. We move the characters `Hello, World!` to it. A
+characters are represented as a combination of an 8-bit color code and
+an 8-bit [ASCII code][8]. `0x2F` means grey (0x2) background and white
+(0x0F) font color. `0x48` is `H`, `0x65` is `e`, and so on.
+
+```
+$ nasm boot_simple.asm
+$ hexdump -x boot_simple
+0000000    05c7    8000    000b    2f48    2f65    05c7    8004    000b
+0000010    2f6c    2f6c    05c7    8008    000b    2f6f    2f2c    05c7
+0000020    800c    000b    2f20    2f57    05c7    8010    000b    2f6f
+0000030    2f72    05c7    8010    000b    2f6c    2f64    05c7    8014
+0000040    000b    2f21    2f20    00f4
+0000047
+```
+
+By the way, we can diassemble the hex file by:
+```
+$ ndisasm -b 32 boot_simple
+00000000  C70500800B00482F  mov dword [dword 0xb8000],0x2f652f48
+         -652F
+0000000A  C70504800B006C2F  mov dword [dword 0xb8004],0x2f6c2f6c
+          -6C2F
+00000014  C70508800B006F2F  mov dword [dword 0xb8008],0x2f2c2f6f
+          -2C2F
+0000001E  C7050C800B00202F  mov dword [dword 0xb800c],0x2f572f20
+          -572F
+00000028  C70510800B006F2F  mov dword [dword 0xb8010],0x2f722f6f
+          -722F
+00000032  C70510800B006C2F  mov dword [dword 0xb8010],0x2f642f6c
+          -642F
+0000003C  C70514800B00212F  mov dword [dword 0xb8014],0x2f202f21
+          -202F
+00000046  F4                hlt
+```
+
+[7]: https://en.wikipedia.org/wiki/VGA-compatible_text_mode#Access_methods
+[8]: https://en.wikipedia.org/wiki/ASCII#ASCII_printable_code_chart
+
+# ELF Object File
+

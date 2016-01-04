@@ -51,9 +51,46 @@ start with a *Multiboot Header*, which has the following format:
 For an x86 machine, the following bootloader header works:
 
 ```asm
+section .multiboot_header
+header_start:
+    dd 0xE85250D6               ;magic number
+    dd 0                        ;protected mode of i386
+    dd header_end-header_start  ;header length
+    ;checksum
+    dd 0x100000000-(0xE85250D6+0+(header_end-header_start))
 
+    ;optional multiboot tags
+    ;none here
+
+    ;end tag
+    dw 0                        ;type
+    dw 0                        ;flags
+    dd 8                        ;size
+header_end:
+```
+
+Some basic knowledge of assembly language is required:
+* section
+* label (which marks a memory location)
+* `dd`: define double (32-bit), `dw`: define word (16-bit); they just
+* output the specific constants
+
+Notice that the formula of the checksum is a negetive integer
+(`checksum+header_length` should be zero) which cannot fit into 32-bit.
+By subtracting it from 0x100000000, we keep the value positive without
+changing its truncated value.
+
+Then assemble this file using `nasm`, and look at the hex value of it:
+```
+$ nasm multiboot_header.asm
+$ hexdump -x multiboot_header
+0000000    50d6    e852    0000    0000    0018    0000    af12    17ad
+0000010    0000    0000    0008    0000
+0000018
 ```
 
 [5]: https://en.wikipedia.org/wiki/Multiboot_Specification
 [6]: http://nongnu.askapache.com/grub/phcoder/multiboot.pdf
+
+# Boot the kernel
 

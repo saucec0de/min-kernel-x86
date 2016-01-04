@@ -92,7 +92,7 @@ $ hexdump -x multiboot_header
 [5]: https://en.wikipedia.org/wiki/Multiboot_Specification
 [6]: http://nongnu.askapache.com/grub/phcoder/multiboot.pdf
 
-# Boot the kernel
+## Boot the kernel
 
 The bootloader then needs to boot the kernel. We put a short code in the
 .text section which contains the executable codes. The file is named as
@@ -119,8 +119,8 @@ start:
 The `global` exports the label `start`. At address `0xB8000` begins [VGA
 text buffer][7]. We move the characters `Hello, World!` to it. A
 characters are represented as a combination of an 8-bit color code and
-an 8-bit [ASCII code][8]. `0x2F` means grey (0x2) background and white
-(0x0F) font color. `0x48` is `H`, `0x65` is `e`, and so on.
+an 8-bit [ASCII code][8]. `0x2F` means grey (`0x2`) background and white
+(`0x0F`) font color. `0x48` is `H`, `0x65` is `e`, and so on.
 
 ```
 $ nasm boot_simple.asm
@@ -156,5 +156,5 @@ $ ndisasm -b 32 boot_simple
 [7]: https://en.wikipedia.org/wiki/VGA-compatible_text_mode#Access_methods
 [8]: https://en.wikipedia.org/wiki/ASCII#ASCII_printable_code_chart
 
-# ELF Object File
+## ELF Object File
 

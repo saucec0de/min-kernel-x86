@@ -158,3 +158,14 @@ $ ndisasm -b 32 boot_simple
 
 ## ELF Object File
 
+The executable should be [ELF][9] executable if we want to boot it
+through GRUB. So that we need to create an [ELF objects][10] and link
+them together using a [linker script][11]. The linker script `linker.ld`
+looks like this:
+```asm
+```
+
+[9]: https://en.wikipedia.org/wiki/Executable_and_Linkable_Format
+[10]: http://wiki.osdev.org/Object_Files
+[11]: https://sourceware.org/binutils/docs/ld/Scripts.html
+

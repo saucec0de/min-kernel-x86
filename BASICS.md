@@ -44,7 +44,7 @@ start with a *Multiboot Header*, which has the following format:
 | magic number  | u32             | Identifies the header, which must be `0xE85250D6`            |
 | architecture  | u32             | `0` for 32-bit (protected) mode of i386, `4` for 32-bit MIPS |
 | header length | u32             | Total header size in bytes, including tags and magic fields  |
-| checksum      | u32             | `-(magic + architecture + header_length)`, must be zero      |
+| checksum      | u32             | `-(magic + architecture + header_length)`, sum must be zero  |
 | tags          | variable        | Kinds of (type, flags, size)                                 |
 | end tag       | (u16, u16, u32) | `(0, 0, 8)`                                                  |
 
@@ -224,6 +224,13 @@ isofiles
 
 The `grub.cfg` is a simple [GRUB configuration file][12]:
 ```cfg
+set timeout = 0
+set default = 0
+
+menuentry "MinOS" {
+    multiboot2 /boot/kernel.bin
+    boot
+}
 ```
 
 Make sure that the version of your `xorriso` is newer than `1.2.9`. Then
@@ -232,4 +239,15 @@ create the image by:
 grub-mkrescue -o min-os.iso isofiles
 ```
 
+All steps can be done within a [Makefile][13].
+
 [12]: http://www.gnu.org/software/grub/manual/grub.html#Configuration
+[13]: ./Makefile
+
+## Run
+
+As shown in [Makefile][13], we can boot our little kernel by:
+```
+qemu-system-x86_64 -cdrom min-os.iso
+```
+

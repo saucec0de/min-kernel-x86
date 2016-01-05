@@ -11,7 +11,8 @@ start:
     mov dword [0xB8008], 0x2F2C2F6F
     mov dword [0xB800C], 0x2F572F20
     mov dword [0xB8010], 0x2F722F6F
-    mov dword [0xB8010], 0x2F642F6C
-    mov dword [0xB8014], 0x2F202F21
+    mov dword [0xB8014], 0x2F642F6C
+    mov word  [0xB8018], 0x2F21
+
     hlt         ;halt the CPU
 

@@ -14,9 +14,12 @@ is put in [BASICS.md]. The blog post has more detailed information. The
 kernel, in fact, does very simple task. It will boot and print a line of
 `Hello, World!` to the screen.
 
+[LONGMODE.md] introduces how to enter 64-bit long mode and set up Paging.
+
 [1]: https://github.com/phil-opp
 [2]: http://blog.phil-opp.com/rust-os/multiboot-kernel.html
 [BASICS.md]: ./BASICS.md
+[LONGMODE.md]: ./LONGMODE.md
 
 
 ## Todo
